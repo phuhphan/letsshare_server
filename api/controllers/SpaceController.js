@@ -71,7 +71,7 @@ module.exports = {
 		            if (results.length > 0) {
                         for (var i = 0; i < results.length; i++) {
                             var space = results[i];
-                            results[i].user = space.getUser();
+                            results[i].user = space.user;
                         }
 		            	res.json(Response.success({space: results}));
 		            }else{
@@ -91,6 +91,27 @@ module.exports = {
 	detail: function (req, res){
 		var space_id	= req.param('space_id');
 		var session_id	= req.param('session_id');
+
+        User.query("SELECT users.user_id, users.first_name, users.last_name, users.gender FROM users WHERE session_id = '" + session_id + "'", function(err, results) {
+          if (err) 
+            res.json(Response.fail('This session have issues'));
+          else{
+            if (results.length > 0) {
+                Favorite.findOne({space_id:space_id}).exec(function (err, value){
+                    if (err) {
+                        res.json(Response.fail('Have issue on this space'));
+                    }
+                    if (!value) {
+                        res.json(Response.success(value));
+                    }else{
+                        res.json(Response.success('This space is not found'));
+                    }
+                });
+            }else{
+                res.json(Response.fail('This session is expired'));
+            }
+          }
+        });
 
 	}
 };

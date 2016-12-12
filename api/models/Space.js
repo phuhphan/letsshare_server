@@ -116,17 +116,5 @@ module.exports = {
           collection: 'Favorite',
           via: 'space'
         },
-        getUser: function (){
-            User.findOne({user_id: this.user}).exec(function (err, value){
-                if (err) {
-                    return null;
-                }
-                if (!value) {
-                    return {user_id: value.user_id, first_name: value.first_name, last_name: value.last_name, avatar_id: value.avatar_id}
-                }else{
-                    return null;
-                }
-            });
-        },
-    }
+    },
 };
